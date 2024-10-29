@@ -30,7 +30,7 @@
     <connection id="858b3db7-4950-4f77-bc89-b3ff9d8afcf3" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="858b3db7-4950-4f77-bc89-b3ff9d8afcf3" dataset="kul_tables.bkpf" active-filter-id="" />
+    <filter-actions connection-id="858b3db7-4950-4f77-bc89-b3ff9d8afcf3" dataset="kul_tables.bkpf" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -55,7 +55,7 @@
           <description value="" />
           <database-type value="MYSQL" />
           <config-type value="BASIC" />
-          <database-version value="9999.0" />
+          <database-version value="8.0" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -67,7 +67,7 @@
           <tns-profile value="" />
           <type value="USER_PASSWORD" />
           <user value="root" />
-          <deprecated-pwd value="TW1pam4zNWwkISQ=" />
+          <deprecated-pwd value="cm9vdA==" />
         </database>
         <properties>
           <auto-commit value="false" />
