@@ -46,7 +46,7 @@ public class mainView extends JFrame {
     }
 
     private void loadData(String filter) {
-        String query = "SELECT * FROM your_table_name";
+        String query = "SELECT * FROM bkpf";
 
         List<String[]> data = DatabaseHelper.getTableData(query);
 
