@@ -25,8 +25,13 @@ public class DatabaseHelper {
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-
             int columnCount = rs.getMetaData().getColumnCount();
+
+            String[] tableNames = new String[columnCount];
+            for (int i = 1; i<=columnCount;i++){
+                tableNames[i-1]=rs.getMetaData().getColumnName(i);
+            }
+            data.add(tableNames);
             while (rs.next()) {
                 String[] row = new String[columnCount];
                 for (int i = 1; i <= columnCount; i++) {

@@ -9,7 +9,6 @@ public class mainView extends JFrame {
     private JTextField yearField;
     private JTextField companyField;
     private JTextField documentField;
-    private JTextField filterField;
     private JButton filterButton;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -26,7 +25,6 @@ public class mainView extends JFrame {
         documentField = new JTextField(10);
 
 
-        filterField = new JTextField(20);
         filterButton = new JButton("Filter");
 
         JPanel panel = new JPanel();
