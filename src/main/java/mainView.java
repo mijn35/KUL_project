@@ -39,6 +39,7 @@ public class mainView extends JFrame {
 
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         JScrollPane scrollPane = new JScrollPane(table);
 
         add(panel, BorderLayout.NORTH);
