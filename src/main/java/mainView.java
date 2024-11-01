@@ -79,14 +79,15 @@ public class mainView extends JFrame {
         tableModel.setRowCount(0);
         tableModel.setColumnCount(0);
 
-        if (data.size() > 0) {
-            String[] columnNames = data.get(0);
+        if (!data.isEmpty()) {
+            String[] columnNames = data.getFirst();
             for (String col : columnNames) {
                 tableModel.addColumn(col);
             }
-            for (String[] row : data) {
-                tableModel.addRow(row);
-            }
+            data.stream().skip(1).forEach((row) -> tableModel.addRow(row));
+        }
+        else{
+            throw new java.lang.Error("database is empty or loaded incorrectly");
         }
     }
 }
