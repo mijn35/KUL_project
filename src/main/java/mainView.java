@@ -3,12 +3,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class mainView extends JFrame {
     private JTextField yearField;
     private JTextField companyField;
-    private JTextField documentField;
+    private JTextField firstDocumentField;
+    private JTextField lastDocumentField;
     private JButton filterButton;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -22,7 +24,8 @@ public class mainView extends JFrame {
         // Filter fields
         yearField = new JTextField(4);
         companyField = new JTextField(4);
-        documentField = new JTextField(10);
+        firstDocumentField = new JTextField(4);
+        lastDocumentField = new JTextField(4);
 
 
         filterButton = new JButton("Filter");
@@ -32,8 +35,10 @@ public class mainView extends JFrame {
         panel.add(yearField);
         panel.add(new JLabel("Company Code:"));
         panel.add(companyField);
-        panel.add(new JLabel("Document Number:"));
-        panel.add(documentField);
+        panel.add(new JLabel("Document Number range:"));
+        panel.add(firstDocumentField);
+        panel.add(new JLabel("-"));
+        panel.add(lastDocumentField);
         panel.add(filterButton);
 
 
@@ -46,7 +51,7 @@ public class mainView extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load data initially
-        loadData("","","");
+        loadData("","","","");
 
         // Filter button action
         filterButton.addActionListener(new ActionListener() {
@@ -54,27 +59,40 @@ public class mainView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String fiscalYear = yearField.getText();
                 String companyCode = companyField.getText();
-                String documentNumber = documentField.getText();
-                loadData(fiscalYear, companyCode, documentNumber);
+                String firstDocumentNumber = firstDocumentField.getText();
+                String lastDocumentNumber = lastDocumentField.getText();
+                loadData(fiscalYear, companyCode, firstDocumentNumber,lastDocumentNumber);
             }
         });
     }
 
-    private void loadData(String fiscalYear, String companyCode, String documentNumber) {
-        String query = "SELECT * FROM bkpf WHERE 1=1";
+    private void loadData(String fiscalYear, String companyCode, String firstDocumentNumber, String lastDocumentNumber) {
+        StringBuilder query = new StringBuilder("SELECT * FROM bkpf WHERE 1=1");
+        List<String> parameters = new ArrayList<>();
 
         // Append conditions based on user input
         if (!fiscalYear.isEmpty()) {
-            query += " AND GJAHR = '" + fiscalYear + "'";
+            query.append(" AND GJAHR = ?");
+            parameters.add(fiscalYear);
         }
         if (!companyCode.isEmpty()) {
-            query += " AND BUKRS = '" + companyCode + "'";
+            query.append(" AND BUKRS = ?");
+            parameters.add(companyCode);
         }
-        if (!documentNumber.isEmpty()) {
-            query += " AND BELNR = '" + documentNumber + "'";
+        if (!firstDocumentNumber.isEmpty() && !lastDocumentNumber.isEmpty()) {
+            query.append(" AND BELNR BETWEEN ? AND ?");
+            parameters.add(firstDocumentNumber);
+            parameters.add(lastDocumentNumber);
+        } else if (!firstDocumentNumber.isEmpty()) {
+            query.append(" AND BELNR = ?");
+            parameters.add(firstDocumentNumber);
+        } else if (!lastDocumentNumber.isEmpty()) {
+            query.append(" AND BELNR = ?");
+            parameters.add(lastDocumentNumber);
         }
 
-        List<String[]> data = DatabaseHelper.getTableData(query);
+        // Fetch data using prepared statements
+        List<String[]> data = DatabaseHelper.getTableData(query.toString(), parameters.toArray());
 
         // Clear previous data
         tableModel.setRowCount(0);
@@ -85,10 +103,10 @@ public class mainView extends JFrame {
             for (String col : columnNames) {
                 tableModel.addColumn(col);
             }
-            data.stream().skip(1).forEach((row) -> tableModel.addRow(row));
-        }
-        else{
-            throw new java.lang.Error("database is empty or loaded incorrectly");
+            data.stream().skip(1).forEach(row -> tableModel.addRow(row));
+        } else {
+            throw new java.lang.Error("Database is empty or loaded incorrectly");
         }
     }
+
 }
