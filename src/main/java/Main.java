@@ -6,8 +6,7 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             mainView viewer = new mainView();
-            viewer.DatabaseViewer();
-            viewer.setVisible(true);
+            SwingUtilities.invokeLater(() -> new mainView().setVisible(true));
         });
     }
 }
