@@ -14,6 +14,7 @@ public class mainView extends JFrame {
     private JTextField firstDocumentField;
     private JTextField lastDocumentField;
     private JButton filterButton;
+    private TreeTable treeTable;
 
     public mainView() {
         setTitle("Database Table Viewer");
@@ -27,8 +28,10 @@ public class mainView extends JFrame {
         firstDocumentField = new JTextField(4);
         lastDocumentField = new JTextField(4);
 
+        // Button
         filterButton = new JButton("Filter");
 
+        // Pannels
         JPanel panel = new JPanel();
         panel.add(new JLabel("Fiscal Year:"));
         panel.add(yearField);
@@ -40,13 +43,11 @@ public class mainView extends JFrame {
         panel.add(lastDocumentField);
         panel.add(filterButton);
 
-        //load initial data
-        List<String[]> bkpfData = loadBkpf("", "", "", "");
-        List<String[]> bsegData = loadBseg("", "", "", "");
-        String[] headers = Stream.concat(Arrays.stream(bkpfData.getFirst()),Arrays.stream(bsegData.getFirst())).toArray(String[]::new); //first row are the headers
-        TreeTable treeTable = new TreeTable(bkpfData.subList(1, bkpfData.size()),bsegData.subList(1, bsegData.size()),headers); //all other rows are the data
-        JScrollPane scrollPane = new JScrollPane(treeTable.getTreeTable());
+        // Initial load data
+        loadData();
 
+        // ScrollPannel
+        JScrollPane scrollPane = new JScrollPane(treeTable.getTreeTable());
         add(panel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -59,10 +60,35 @@ public class mainView extends JFrame {
                 String companyCode = companyField.getText();
                 String firstDocumentNumber = firstDocumentField.getText();
                 String lastDocumentNumber = lastDocumentField.getText();
-                loadBkpf(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
+                loadData(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
             }
         });
     }
+
+    private void loadData() {
+        loadData("", "", "", "");
+    }
+
+    private void loadData(String fiscalYear, String companyCode, String firstDocumentNumber, String lastDocumentNumber) {
+        List<String[]> bkpfData = loadBkpf(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
+        List<String[]> bsegData = loadBseg(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
+
+        // Create the TreeTable with the loaded data
+        if (treeTable != null) {
+            treeTable.updateData(bkpfData.subList(1, bkpfData.size()), bsegData.subList(1, bsegData.size()));
+        } else {
+            // make the header
+            String[] bkpfHeaders = bkpfData.getFirst();
+            String[] bsegHeaders = bsegData.getFirst();
+            String[] headers = new String[bkpfHeaders.length + bsegHeaders.length - 3];
+            System.arraycopy(bkpfHeaders, 0, headers, 0, bkpfHeaders.length); // Copy bkpf headers
+            System.arraycopy(bsegHeaders, 3, headers, bkpfHeaders.length, bsegHeaders.length - 3); // Skip first 3 bseg headers
+
+            // make treetable with headers and data nicely seperated
+            treeTable = new TreeTable(bkpfData.subList(1, bkpfData.size()), bsegData.subList(1, bsegData.size()), headers);
+        }
+    }
+
 
     private List<String[]> loadBkpf(String fiscalYear, String companyCode, String firstDocumentNumber, String lastDocumentNumber) {
 
