@@ -43,8 +43,8 @@ public class mainView extends JFrame {
         //load initial data
         List<String[]> bkpfData = loadBkpf("", "", "", "");
         List<String[]> bsegData = loadBseg("", "", "", "");
-        String[] headers = Stream.concat(Arrays.stream(bkpfData.getFirst()),Arrays.stream(bsegData.getFirst())).toArray(String[]::new);
-        TreeTable treeTable = new TreeTable(bkpfData,bsegData,headers);
+        String[] headers = Stream.concat(Arrays.stream(bkpfData.getFirst()),Arrays.stream(bsegData.getFirst())).toArray(String[]::new); //first row are the headers
+        TreeTable treeTable = new TreeTable(bkpfData.subList(1, bkpfData.size()),bsegData.subList(1, bsegData.size()),headers); //all other rows are the data
         JScrollPane scrollPane = new JScrollPane(treeTable.getTreeTable());
 
         add(panel, BorderLayout.NORTH);
