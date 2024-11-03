@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class TreeTable {
-    private String[] headings;
-    private Node root;
+    private final String[] headings;
     private DefaultTreeTableModel model;
     private JXTreeTable table;
     private List<String[]> bkpfcontent;
@@ -21,7 +20,7 @@ public class TreeTable {
     }
 
     private void buildTree() {
-        root = new RootNode("Root");
+        Node root = new RootNode("Root");
         for (String[] bkpfdata : this.bkpfcontent) {
             ChildNode child = new ChildNode(bkpfdata);
             root.add(child);

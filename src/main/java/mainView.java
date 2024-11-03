@@ -1,24 +1,18 @@
-import org.jdesktop.swingx.JXTreeTable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class mainView extends JFrame {
-    private JTextField yearField;
-    private JTextField companyField;
-    private JTextField firstDocumentField;
-    private JTextField lastDocumentField;
-    private JButton filterButton;
+    private final JTextField yearField;
+    private final JTextField companyField;
+    private final JTextField firstDocumentField;
+    private final JTextField lastDocumentField;
     private TreeTable treeTable;
 
     public mainView() {
         setTitle("Database Table Viewer");
-        setSize(800, 600);
+        setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -29,7 +23,7 @@ public class mainView extends JFrame {
         lastDocumentField = new JTextField(4);
 
         // Button
-        filterButton = new JButton("Filter");
+        JButton filterButton = new JButton("Filter");
 
         // Pannels
         JPanel panel = new JPanel();
@@ -53,15 +47,12 @@ public class mainView extends JFrame {
 
 
         // Filter button action
-        filterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String fiscalYear = yearField.getText();
-                String companyCode = companyField.getText();
-                String firstDocumentNumber = firstDocumentField.getText();
-                String lastDocumentNumber = lastDocumentField.getText();
-                loadData(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
-            }
+        filterButton.addActionListener(_ -> {
+            String fiscalYear = yearField.getText();
+            String companyCode = companyField.getText();
+            String firstDocumentNumber = firstDocumentField.getText();
+            String lastDocumentNumber = lastDocumentField.getText();
+            loadData(fiscalYear, companyCode, firstDocumentNumber, lastDocumentNumber);
         });
     }
 
@@ -117,8 +108,7 @@ public class mainView extends JFrame {
         }
 
         // Fetch main documents from the database
-        List<String[]> mainData = DatabaseHelper.getTableData(query.toString(), parameters.toArray());
-        return mainData;
+        return DatabaseHelper.getTableData(query.toString(), parameters.toArray());
     }
 
     private List<String[]> loadBseg(String fiscalYear, String companyCode, String firstDocumentNumber, String lastDocumentNumber) {
@@ -148,7 +138,6 @@ public class mainView extends JFrame {
         }
 
         // Fetch main documents from the database
-        List<String[]> subData = DatabaseHelper.getTableData(query.toString(), parameters.toArray());
-        return subData;
+        return DatabaseHelper.getTableData(query.toString(), parameters.toArray());
     }
 }
